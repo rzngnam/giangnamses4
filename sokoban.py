@@ -32,6 +32,8 @@ recent_x = 0
 recent_y = 0
 recent_box_x = 0
 recent_box_y = 0
+box_old_pos_x = 0
+box_old_pos_y = 0
 
 by = 0
 bx = 0
@@ -132,39 +134,39 @@ while True:
             player['y'] -= dy
             break
     for box in boxes:
-        if (0 > box['x'] + dx) and (0 > box['y']+dy):
-            player['x'] -= dx
-            player['y'] -= dy
-    for i in range(len(boxes)):
-        for box in boxes:
-            if (player["x"] == box['x']) and (player["y"] == box["y"]) and \
-                    (0 <= box['x'] + dx <= map['size_x'] - 1) and (0 <= box['y'] + dy <= map["size_y"] - 1):
-                bx = dx
-                by = dy
-                recent_box_x = bx
-                recent_box_y = by
-                for box_x in boxes:
-                    for box_y in boxes:
-                        if (box_x['x'] == box_y['x'] + dx) and (box_x['y'] == box_y['y'] + dy):
-                            player['x'] -= dx
-                            player['y'] -= dy
-                            recent_y = 0
-                            recent_x = 0
-                            bx = 0
-                            by = 0
-                for wall in walls:
-                    if (wall['x'] - dx == box['x']) and (wall['y'] - dy == box['y']):
-                        bx = 0
-                        by = 0
+        if (player["x"] == box['x']) and (player["y"] == box["y"]) and \
+                (0 <= box['x'] + dx <= map['size_x'] - 1) and (0 <= box['y'] + dy <= map["size_y"] - 1):
+            bx = dx
+            by = dy
+            for box_x in boxes:
+                for box_y in boxes:
+                    if (box_x['x'] == box_y['x'] + dx) and (box_x['y'] == box_y['y'] + dy):
                         player['x'] -= dx
                         player['y'] -= dy
                         recent_y = 0
                         recent_x = 0
-                box['x'] += bx
-                box['y'] += by
-        if move == "undo":
-            box['x'] -= recent_box_x
-            box['y'] -= recent_box_y
+                        bx = 0
+                        by = 0
+            for wall in walls:
+                if (wall['x'] - dx == box['x']) and (wall['y'] - dy == box['y']):
+                    bx = 0
+                    by = 0
+                    player['x'] -= dx
+                    player['y'] -= dy
+                    recent_y = 0
+                    recent_x = 0
+            recent_box_x = bx
+            recent_box_y = by
+            box_old_pos_x = box['x']
+            box_old_pos_y = box['y']
+            box['x'] += bx
+            box['y'] += by
+    if move == "undo":
+        for box in boxes:
+            if (box['x'] - recent_box_x == box_old_pos_x) and (box['y'] - recent_box_y == box_old_pos_y):
+                box['x'] = box_old_pos_x
+                box['y'] = box_old_pos_y
+                break
     if move == "undo":
         player['x'] -= recent_x
         player['y'] -= recent_y

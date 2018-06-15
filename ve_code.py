@@ -16,7 +16,7 @@ while True:
     for i in range(n-2):
         if i == (n // 2)-1:
             for j in range(n*10):
-                if (j == 0) or (j == n * 2 + 3) or (j == n * 4 + 1) or (j == n *4 + 6) \
+                if (j == 0) or (j == n * 2 + 3) or (j == n * 4 + 1) or (j == n * 4 + 6) \
                         or (j == n*6 + 4) or (j == n*6 + 7):
                     print('*', end='')
                 elif j in range(n * 6 + 9, n*7 + 8):
